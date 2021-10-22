@@ -6,7 +6,7 @@
 /*   By: moerradi <marvin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/10 19:33:21 by moerradi          #+#    #+#             */
-/*   Updated: 2021/10/15 19:07:38 by moerradi         ###   ########.fr       */
+/*   Updated: 2021/10/22 15:02:07 by moerradi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,23 +43,66 @@ int	init_data(t_data *data, char **argv, bool last_arg)
 	return (1);
 }
 
-
-
-int init_philos(t_data *data)
+int	init_forks()
 {
-	pthread_t thread;
+	
+}
 
-	if (pthread_create(&thread, NULL, routine, data) != 0)
+int	init_philos(t_data *data)
+{
+	int i;
+
+	data->philos = malloc(sizeof(pthread_t) * data->philos_number);
+	i = 0;	
+	while (i < data->philos_number)
+	{
+		if (pthread_create(&data->philos[i], NULL, routine, data) != 0)
+			return (0);
+		usleep(30);
+	}
+}
+
+int	init_forks(t_data *data)
+{
+	int i;
+
+	data->forks = malloc(sizeof(pthread_mutex_t) * data->philos_number);
+	i = 0;	
+	while (i < data->philos_number)
+	{
+		if (pthread_mutex_init(&data->forks[i], NULL))
+			return (0);
+	}
+}
+
+int	destroy_forks(t_data *data)
+{
+	int i;
+
+	i = 0;
+	while (i < data->philos_number)
+	{
+		if (pthread_mutex_init(&data->forks[i], NULL) != 0)
+			return (0);
+	}
+}
+
+int	init(int argc, char **argv, t_data *data)
+{
+	struct timeval temp;
+	if (!init_data(&data, argv, argc == 6))
 		return (0);
-	return(1);
-	// else
-		// printf("lhbal\n");
+	if (!init_forks(data))
+		return (0);
+	if (pthread_mutex_init(&data->print, NULL))
+		return (0);
+	gettimeofday()
 }
 
 int	main(int argc, char **argv)
 {
 	
-	t_data	data;
+	t_data		data;
 
 	if (argc != 5 && argc != 6)
 	{
@@ -67,10 +110,6 @@ int	main(int argc, char **argv)
 time_to_eat time_to_sleep [number_of_times_each_philosopher_must_eat]\n");
 		return (1);
 	}
-	if (!init_data(&data, argv, argc == 6))
-		return (1);
-	if (!init_philos(&data))
-		return (1);
-	// // while (1)
-		usleep(300);
+
+		
 }

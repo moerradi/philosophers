@@ -6,13 +6,13 @@
 /*   By: moerradi <marvin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/10 19:41:01 by moerradi          #+#    #+#             */
-/*   Updated: 2021/10/10 19:41:02 by moerradi         ###   ########.fr       */
+/*   Updated: 2021/10/22 11:38:03 by moerradi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
-int	atoi_pro(const char *str)
+int		atoi_pro(const char *str)
 {
 	long	result;
 
@@ -28,4 +28,15 @@ int	atoi_pro(const char *str)
 	if (*str != '\0')
 		return (-1);
 	return (result);
+}
+
+void	get_time()
+{
+	
+	return ()
+}
+
+void	trint(int timestamp, int id, const char *status, pthread_mutex_t *mutex)
+{
+	pthread_mutex_lock()
 }
