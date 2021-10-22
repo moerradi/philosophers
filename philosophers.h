@@ -6,7 +6,7 @@
 /*   By: moerradi <marvin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/10 19:41:09 by moerradi          #+#    #+#             */
-/*   Updated: 2021/10/22 11:40:34 by moerradi         ###   ########.fr       */
+/*   Updated: 2021/10/22 19:52:15 by moerradi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,15 @@
 # include <sys/time.h>
 
 typedef unsigned long t_time;
+typedef	enum	e_status
+{
+	EATING,
+	THINKING,
+	SLEEPING,
+	DIED,
+	TOOK_LFORK,
+	TOOK_RFORK
+}				t_status;
 typedef struct s_data
 {
 	int	philos_number;
@@ -29,11 +38,17 @@ typedef struct s_data
 	int	time_to_sleep;
 	int	max_eats;
 	pthread_mutex_t	*forks;
-	pthread_t		*philos;
 	pthread_mutex_t	print;
-	t_time	startimes;
+	t_time	t0;
+	bool	someone_died;
 }				t_data;
 
+typedef struct s_philo
+{
+	int	id;
+	int 
+}
+t_time	get_current_time();
 int		atoi_pro(const char *str);
 void	*routine(void *data);
 

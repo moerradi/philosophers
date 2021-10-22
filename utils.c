@@ -6,7 +6,7 @@
 /*   By: moerradi <marvin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/10 19:41:01 by moerradi          #+#    #+#             */
-/*   Updated: 2021/10/22 11:38:03 by moerradi         ###   ########.fr       */
+/*   Updated: 2021/10/22 18:38:08 by moerradi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,13 +30,36 @@ int		atoi_pro(const char *str)
 	return (result);
 }
 
-void	get_time()
+static t_time	get_relative_time(t_time start)
 {
-	
-	return ()
+	return (start - get_current_time());
 }
 
-void	trint(int timestamp, int id, const char *status, pthread_mutex_t *mutex)
+t_time	get_current_time()
 {
-	pthread_mutex_lock()
+	struct timeval temp;
+	t_time ret;
+	
+	gettimeofday(&temp, NULL);
+	ret = temp.tv_sec * 1000 + temp.tv_usec / 1000;
+	return (ret);
+}
+
+void	print_status(t_data *data, int id, t_status status)
+{
+	t_time temp;
+	pthread_mutex_lock(&data->print);
+	temp = get_relative_time(data->t0);
+	printf("%lu %i ", temp, id);
+	if (status == EATING)
+		printf("is eating\n");
+	else if (status == SLEEPING)
+		printf("is sleeping\n");
+	else if (status == TOOK_LFORK)
+		printf("has taken a fork\n");
+	else if (status == TOOK_RFORK)
+		printf("has taken a fork\n");
+	else if (status == DIED)
+		printf("died\n");
+	pthread_mutex_unlock(&data->print);
 }

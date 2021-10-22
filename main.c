@@ -6,7 +6,7 @@
 /*   By: moerradi <marvin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/10 19:33:21 by moerradi          #+#    #+#             */
-/*   Updated: 2021/10/22 15:02:07 by moerradi         ###   ########.fr       */
+/*   Updated: 2021/10/22 18:40:36 by moerradi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,15 +89,17 @@ int	destroy_forks(t_data *data)
 
 int	init(int argc, char **argv, t_data *data)
 {
-	struct timeval temp;
 	if (!init_data(&data, argv, argc == 6))
 		return (0);
 	if (!init_forks(data))
 		return (0);
 	if (pthread_mutex_init(&data->print, NULL))
 		return (0);
-	gettimeofday()
+	data->t0 = get_current_time();
+	if (!init_philos(data))
+		return (0);
 }
+
 
 int	main(int argc, char **argv)
 {
@@ -110,6 +112,9 @@ int	main(int argc, char **argv)
 time_to_eat time_to_sleep [number_of_times_each_philosopher_must_eat]\n");
 		return (1);
 	}
-
-		
+	if (!init(argc, argv, &data))
+	{
+		printf("an error occured while initializing threads\n");
+		return (1);
+	}
 }
