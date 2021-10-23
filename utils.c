@@ -6,7 +6,7 @@
 /*   By: moerradi <marvin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/10 19:41:01 by moerradi          #+#    #+#             */
-/*   Updated: 2021/10/22 18:38:08 by moerradi         ###   ########.fr       */
+/*   Updated: 2021/10/23 17:12:38 by moerradi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,18 @@ t_time	get_current_time()
 	gettimeofday(&temp, NULL);
 	ret = temp.tv_sec * 1000 + temp.tv_usec / 1000;
 	return (ret);
+}
+
+int	destroy_forks(t_data *data)
+{
+	int i;
+
+	i = 0;
+	while (i < data->philos_number)
+	{
+		if (pthread_mutex_destroy(&data->forks[i]) != 0)
+			return (0);
+	}
 }
 
 void	print_status(t_data *data, int id, t_status status)
