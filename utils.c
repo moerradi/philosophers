@@ -6,13 +6,13 @@
 /*   By: moerradi <marvin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/10 19:41:01 by moerradi          #+#    #+#             */
-/*   Updated: 2021/10/23 17:12:38 by moerradi         ###   ########.fr       */
+/*   Updated: 2021/10/24 15:01:41 by moerradi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
-int		atoi_pro(const char *str)
+unsigned long	atoul_pro(const char *str)
 {
 	long	result;
 
@@ -52,9 +52,10 @@ int	destroy_forks(t_data *data)
 	i = 0;
 	while (i < data->philos_number)
 	{
-		if (pthread_mutex_destroy(&data->forks[i]) != 0)
+		if (pthread_mutex_destroy(&data->forks[i++]) != 0)
 			return (0);
 	}
+	return (1);
 }
 
 void	print_status(t_data *data, int id, t_status status)
