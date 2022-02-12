@@ -6,13 +6,13 @@
 /*   By: moerradi <marvin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/10 19:41:01 by moerradi          #+#    #+#             */
-/*   Updated: 2021/10/24 15:01:41 by moerradi         ###   ########.fr       */
+/*   Updated: 2022/02/12 19:36:59 by moerradi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
-unsigned long	atoul_pro(const char *str)
+int	atoi_pro(const char *str)
 {
 	long	result;
 
@@ -32,7 +32,7 @@ unsigned long	atoul_pro(const char *str)
 
 static t_time	get_relative_time(t_time start)
 {
-	return (start - get_current_time());
+	return (get_current_time() - start);
 }
 
 t_time	get_current_time()
@@ -61,6 +61,8 @@ int	destroy_forks(t_data *data)
 void	print_status(t_data *data, int id, t_status status)
 {
 	t_time temp;
+	static bool done = false;
+
 	pthread_mutex_lock(&data->print);
 	temp = get_relative_time(data->t0);
 	printf("%lu %i ", temp, id);
@@ -73,6 +75,9 @@ void	print_status(t_data *data, int id, t_status status)
 	else if (status == TOOK_RFORK)
 		printf("has taken a fork\n");
 	else if (status == DIED)
+	{
 		printf("died\n");
+		done = true;		
+	}
 	pthread_mutex_unlock(&data->print);
 }

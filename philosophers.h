@@ -6,7 +6,7 @@
 /*   By: moerradi <marvin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/10 19:41:09 by moerradi          #+#    #+#             */
-/*   Updated: 2021/10/24 15:16:14 by moerradi         ###   ########.fr       */
+/*   Updated: 2022/02/12 21:46:04 by moerradi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,10 +33,10 @@ typedef	enum			e_status
 typedef struct 			s_data
 {
 	int					philos_number;
-	t_time				time_to_die;
-	t_time				time_to_eat;
-	t_time				time_to_sleep;
-	unsigned long		max_eats;
+	int					time_to_die;
+	int					time_to_eat;
+	int					time_to_sleep;
+	int					max_eats;
 	pthread_mutex_t		print;
 	pthread_mutex_t		*forks;
 	t_time				t0;
@@ -45,15 +45,21 @@ typedef struct 			s_data
 
 typedef struct			s_philo
 {
+	bool				iseating;
 	int					index;
 	pthread_t			id;
 	t_time				last_eated;
 	t_data				*data;
+	int					lfork;
+	int					rfork;
+	int					eat_count;
+	pthread_mutex_t		super;
 }						t_philo;
 
 t_time			get_current_time();
-unsigned long	atoul_pro(const char *str);
-void			*routine(void *data);
-int				init(int argc, char **argv, t_data *data, t_philo **philos);
+int				atoi_pro(const char *str);
+void			*routine(void *philo);
+t_philo			*init(int argc, char **argv, t_data *data);
+void			print_status(t_data *data, int id, t_status status);
 
 #endif

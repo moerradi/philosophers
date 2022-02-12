@@ -6,7 +6,7 @@
 /*   By: moerradi <marvin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/23 16:30:12 by moerradi          #+#    #+#             */
-/*   Updated: 2021/10/24 15:48:34 by moerradi         ###   ########.fr       */
+/*   Updated: 2022/02/12 21:46:58 by moerradi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,21 +20,21 @@ int	ret_error(const char *str)
 
 int	init_data(t_data *data, char **argv, bool last_arg)
 {
-	data->philos_number = atoul_pro(argv[1]);
+	data->philos_number = atoi_pro(argv[1]);
 	if (data->philos_number <= 0)
 		return (ret_error("Philisophers number"));
-	data->time_to_die = atoul_pro(argv[2]);
+	data->time_to_die = atoi_pro(argv[2]);
 	if (data->time_to_die <= 0)
 		return (ret_error("time to die"));
-	data->time_to_eat = atoul_pro(argv[3]);
+	data->time_to_eat = atoi_pro(argv[3]);
 	if (data->time_to_eat <= 0)
 		return (ret_error("time to eat"));
-	data->time_to_sleep = atoul_pro(argv[4]);
-	if (data->time_to_die <= 0)
+	data->time_to_sleep = atoi_pro(argv[4]);
+	if (data->time_to_sleep <= 0)
 		return (ret_error("time to sleep"));
 	if (last_arg)
 	{
-		data->max_eats = atoul_pro(argv[5]);
+		data->max_eats = atoi_pro(argv[5]);
 		if (data->max_eats <= 0)
 			return (ret_error("number of times each philosopher must eat"));
 	}
@@ -43,11 +43,15 @@ int	init_data(t_data *data, char **argv, bool last_arg)
 	return (1);
 }
 
-int	init_forks(t_data *data)
+int	init_mutexes(t_data *data)
 {
 	int i;
 
+	if (pthread_mutex_init(&data->print, NULL))
+		return (1);
 	data->forks = malloc(sizeof(pthread_mutex_t) * data->philos_number);
+	if (!data->forks)
+		return(1);
 	i = 0;	
 	while (i < data->philos_number)
 	{
@@ -57,26 +61,26 @@ int	init_forks(t_data *data)
 	return (1);
 }
 
-int	init(int argc, char **argv, t_data *data, t_philo **philos)
+t_philo	*init(int argc, char **argv, t_data *data)
 {
-	int i;
-	
+	int		i;
+	t_philo	*ret;
+
 	if (!init_data(data, argv, argc == 6))
-		return (0);
-	if (!init_forks(data))
-		return (0);
-	if (pthread_mutex_init(&data->print, NULL))
-		return (0);
+		return (NULL);
+	if (!init_mutexes(data))
+		return (NULL);
 	data->t0 = get_current_time();
-	printf("%lu\n", data->t0);
-	*philos = (t_philo *)malloc(sizeof(t_philo) * data->philos_number);
-	(*philos)->data = (t_data *)malloc(sizeof(t_data));
+	ret = (t_philo *)malloc(sizeof(t_philo) * data->philos_number);
 	i = 0;
 	while (i < data->philos_number)
-		philos[i++]->data = data;
-	// i = 0;
-	// *philos[0].data = data;
-	// printf("%lu\n", philos[0].data->t0);
-	// 	*philos[i++]->data = *data;
-	return (1);
+	{
+		ret[i].index = i + 1;
+		ret[i].lfork = i;
+		ret[i].rfork = (i + 1) % data->philos_number;
+		ret[i].eat_count = 0;
+		ret[i++].data = data;
+		pthread_mutex_init(&ret[i].super, NULL);
+	}
+	return (ret);
 }
