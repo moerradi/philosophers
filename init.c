@@ -6,7 +6,7 @@
 /*   By: moerradi <marvin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/23 16:30:12 by moerradi          #+#    #+#             */
-/*   Updated: 2022/02/12 21:46:58 by moerradi         ###   ########.fr       */
+/*   Updated: 2022/02/15 08:44:45 by moerradi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,14 +45,19 @@ int	init_data(t_data *data, char **argv, bool last_arg)
 
 int	init_mutexes(t_data *data)
 {
-	int i;
+	int	i;
 
 	if (pthread_mutex_init(&data->print, NULL))
 		return (1);
+	if (pthread_mutex_init(&data->s_died, NULL))
+		return (1);
+	if (pthread_mutex_init(&data->max_eats_m, NULL))
+		return (1);
+	pthread_mutex_lock(&data->s_died);
 	data->forks = malloc(sizeof(pthread_mutex_t) * data->philos_number);
 	if (!data->forks)
-		return(1);
-	i = 0;	
+		return (1);
+	i = 0;
 	while (i < data->philos_number)
 	{
 		if (pthread_mutex_init(&data->forks[i++], NULL))
@@ -71,15 +76,19 @@ t_philo	*init(int argc, char **argv, t_data *data)
 	if (!init_mutexes(data))
 		return (NULL);
 	data->t0 = get_current_time();
+	data->death = false;
+	data->max_reached = 0;
 	ret = (t_philo *)malloc(sizeof(t_philo) * data->philos_number);
 	i = 0;
 	while (i < data->philos_number)
 	{
+		ret[i].done = false;
 		ret[i].index = i + 1;
 		ret[i].lfork = i;
 		ret[i].rfork = (i + 1) % data->philos_number;
 		ret[i].eat_count = 0;
-		ret[i++].data = data;
+		ret[i].data = data;
+		ret[i++].last_eated = get_current_time();
 		pthread_mutex_init(&ret[i].super, NULL);
 	}
 	return (ret);
