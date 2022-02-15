@@ -6,7 +6,7 @@
 /*   By: moerradi <marvin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/10 19:33:21 by moerradi          #+#    #+#             */
-/*   Updated: 2022/02/15 08:36:56 by moerradi         ###   ########.fr       */
+/*   Updated: 2022/02/15 11:31:46 by moerradi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,10 +45,20 @@ int	start(t_philo *philos)
 	i = 0;
 	while (i < num)
 	{
-		if (pthread_create(&(philos[i].id), NULL, &routine, philos + i))
+		if (!(i % 2)
+			&& pthread_create(&(philos[i].id), NULL, &routine, philos + i))
 			return (0);
+		usleep(50);
 		i++;
-		usleep(100);
+	}
+	i = 0;
+	while (i < num)
+	{
+		if ((i % 2)
+			&& pthread_create(&(philos[i].id), NULL, &routine, philos + i))
+			return (0);
+		usleep(50);
+		i++;
 	}
 	return (1);
 }

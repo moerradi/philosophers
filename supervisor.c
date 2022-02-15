@@ -6,7 +6,7 @@
 /*   By: moerradi <marvin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/15 08:38:31 by moerradi          #+#    #+#             */
-/*   Updated: 2022/02/15 08:41:39 by moerradi         ###   ########.fr       */
+/*   Updated: 2022/02/15 11:32:53 by moerradi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void	*supervisor(void *philo)
 
 	tmp = (t_philo *)philo;
 	data = tmp->data;
-	while (!data->death)
+	while (true)
 	{
 		pthread_mutex_lock(&tmp->super);
 		since_last = get_current_time() - tmp->last_eated;
@@ -54,7 +54,7 @@ void	*supervisor(void *philo)
 		if (data->max_reached == data->philos_number)
 			return (handle_maxeats(data));
 		pthread_mutex_unlock(&tmp->super);
-		usleep(1000);
+		usleep(500);
 	}
 	return (NULL);
 }

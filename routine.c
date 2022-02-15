@@ -6,11 +6,24 @@
 /*   By: moerradi <marvin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/10 19:41:06 by moerradi          #+#    #+#             */
-/*   Updated: 2022/02/15 08:42:25 by moerradi         ###   ########.fr       */
+/*   Updated: 2022/02/15 11:37:11 by moerradi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
+
+void	custom_sleep(useconds_t time, t_data *data)
+{
+	t_time	t;
+
+	t = get_current_time();
+	while (!data->death)
+	{
+		if ((get_current_time() - t) * 1000 >= time)
+			break ;
+		usleep(300);
+	}
+}
 
 void	eat(t_philo	*philo)
 {
@@ -18,7 +31,7 @@ void	eat(t_philo	*philo)
 	philo->iseating = true;
 	philo->last_eated = get_current_time();
 	print_status(philo->data, philo->index, EATING);
-	usleep(philo->data->time_to_eat * 1000);
+	custom_sleep(philo->data->time_to_eat * 1000, philo->data);
 	philo->eat_count++;
 	philo->iseating = false;
 	pthread_mutex_unlock(&philo->super);
@@ -50,7 +63,7 @@ void	*routine(void *philo)
 		print_status(data, tmp->index, SLEEPING);
 		pthread_mutex_unlock(data->forks + tmp->lfork);
 		pthread_mutex_unlock(data->forks + tmp->rfork);
-		usleep(data->time_to_sleep * 1000);
+		custom_sleep(data->time_to_sleep * 1000, data);
 	}
 	return (NULL);
 }
