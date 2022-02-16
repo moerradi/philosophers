@@ -6,7 +6,7 @@
 /*   By: moerradi <marvin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/10 19:41:06 by moerradi          #+#    #+#             */
-/*   Updated: 2022/02/15 11:37:11 by moerradi         ###   ########.fr       */
+/*   Updated: 2022/02/16 14:47:28 by moerradi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,7 @@ void	*routine(void *philo)
 		pthread_mutex_unlock(data->forks + tmp->lfork);
 		pthread_mutex_unlock(data->forks + tmp->rfork);
 		custom_sleep(data->time_to_sleep * 1000, data);
+		print_status(data, tmp->index, THINKING);
 	}
 	return (NULL);
 }

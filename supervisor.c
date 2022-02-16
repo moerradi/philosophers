@@ -6,7 +6,7 @@
 /*   By: moerradi <marvin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/15 08:38:31 by moerradi          #+#    #+#             */
-/*   Updated: 2022/02/15 11:32:53 by moerradi         ###   ########.fr       */
+/*   Updated: 2022/02/16 14:50:15 by moerradi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ void	*supervisor(void *philo)
 		if (data->max_reached == data->philos_number)
 			return (handle_maxeats(data));
 		pthread_mutex_unlock(&tmp->super);
-		usleep(500);
+		usleep(300);
 	}
 	return (NULL);
 }
