@@ -6,11 +6,24 @@
 /*   By: moerradi <marvin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/10 19:33:21 by moerradi          #+#    #+#             */
-/*   Updated: 2022/02/15 11:31:46 by moerradi         ###   ########.fr       */
+/*   Updated: 2022/02/16 16:21:36 by moerradi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
+
+int	destroy_forks(t_data *data)
+{
+	int	i;
+
+	i = 0;
+	while (i < data->philos_number)
+	{
+		if (pthread_mutex_destroy(&data->forks[i++]) != 0)
+			return (0);
+	}
+	return (1);
+}
 
 int	cleanup(t_philo *philos, t_data *data)
 {
@@ -87,6 +100,7 @@ time_to_eat time_to_sleep [number_of_times_each_philosopher_must_eat]\n");
 	}
 	pthread_mutex_lock(&data.s_died);
 	pthread_mutex_unlock(&data.s_died);
+	usleep(10000);
 	cleanup(philos, &data);
 	return (0);
 }
